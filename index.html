@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الأسطول - Fleet Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- الصفحة الرئيسية -->
+        <div id="loginPage" class="page active">
+            <div class="login-container">
+                <div class="login-card">
+                    <h1>🚗 نظام إدارة الأسطول</h1>
+                    <p>Fleet Management System</p>
+
+                    <!-- اختيار النوع -->
+                    <div class="role-selection">
+                        <button class="role-btn admin-btn" onclick="selectRole('admin')">
+                            <span class="icon">🔐</span>
+                            <span>دخول الإدارة</span>
+                        </button>
+                        <button class="role-btn user-btn" onclick="selectRole('user')">
+                            <span class="icon">👤</span>
+                            <span>دخول موظف</span>
+                        </button>
+                    </div>
+
+                    <!-- نموذج الدخول -->
+                    <div id="loginForm" class="login-form" style="display: none;">
+                        <input type="text" id="username" placeholder="اسم المستخدم" class="input-field">
+                        <input type="password" id="password" placeholder="كلمة السر" class="input-field">
+                        <button onclick="login()" class="btn btn-primary">دخول</button>
+                        <button onclick="backToRoleSelection()" class="btn btn-secondary">رجوع</button>
+                        <div id="errorMsg" class="error-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- لوحة الإدارة -->
+        <div id="adminPanel" class="page">
+            <div class="navbar">
+                <h2>⚙️ لوحة التحكم</h2>
+                <button onclick="logout()" class="btn btn-danger">تسجيل الخروج</button>
+            </div>
+
+            <div class="admin-container">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchAdminTab('users')">
+                        👥 إدارة المستخدمين
+                    </button>
+                    <button class="tab-btn" onclick="switchAdminTab('areas')">
+                        📍 إدارة المناطق
+                    </button>
+                    <button class="tab-btn" onclick="switchAdminTab('branches')">
+                        🏢 إدارة الفروع
+                    </button>
+                    <button class="tab-btn" onclick="switchAdminTab('cars')">
+                        🚗 إدارة السيارات
+                    </button>
+                    <button class="tab-btn" onclick="switchAdminTab('drivers')">
+                        👨‍✈️ إدارة السواقين
+                    </button>
+                    <button class="tab-btn" onclick="switchAdminTab('data')">
+                        📊 عرض البيانات
+                    </button>
+                </div>
+
+                <!-- إدارة المستخدمين -->
+                <div id="usersTab" class="tab-content active">
+                    <h3>👥 إدارة المستخدمين</h3>
+                    <div class="form-group">
+                        <input type="text" id="newUserName" placeholder="اسم المستخدم" class="input-field">
+                        <input type="password" id="newUserPassword" placeholder="كلمة السر" class="input-field">
+                        <button onclick="addUser()" class="btn btn-success">إضافة مستخدم</button>
+                    </div>
+                    <table id="usersTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>كلمة السر</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- إدارة المناطق -->
+                <div id="areasTab" class="tab-content">
+                    <h3>📍 إدارة المناطق</h3>
+                    <div class="form-group">
+                        <input type="text" id="newAreaName" placeholder="اسم المنطقة" class="input-field">
+                        <button onclick="addArea()" class="btn btn-success">إضافة منطقة</button>
+                    </div>
+                    <table id="areasTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- إدارة الفروع -->
+                <div id="branchesTab" class="tab-content">
+                    <h3>🏢 إدارة الفروع</h3>
+                    <div class="form-group">
+                        <input type="text" id="newBranchName" placeholder="اسم الفرع" class="input-field">
+                        <button onclick="addBranch()" class="btn btn-success">إضافة فرع</button>
+                    </div>
+                    <table id="branchesTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- إدارة السيارات -->
+                <div id="carsTab" class="tab-content">
+                    <h3>🚗 إدارة السيارات</h3>
+                    <div class="form-group">
+                        <input type="text" id="newCarNumber" placeholder="رقم السيارة" class="input-field">
+                        <button onclick="addCar()" class="btn btn-success">إضافة سيارة</button>
+                    </div>
+                    <table id="carsTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الرقم</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- إدارة السواقين -->
+                <div id="driversTab" class="tab-content">
+                    <h3>👨‍✈️ إدارة السواقين</h3>
+                    <div class="form-group">
+                        <input type="text" id="newDriverName" placeholder="اسم السائق" class="input-field">
+                        <button onclick="addDriver()" class="btn btn-success">إضافة سائق</button>
+                    </div>
+                    <table id="driversTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <!-- عرض البيانات -->
+                <div id="dataTab" class="tab-content">
+                    <h3>📊 عرض البيانات</h3>
+                    <button onclick="exportToCSV()" class="btn btn-info">📥 تحميل كـ CSV</button>
+                    <table id="dataTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>المسؤول</th>
+                                <th>التاريخ والوقت</th>
+                                <th>المنطقة</th>
+                                <th>الفرع</th>
+                                <th>السيارة</th>
+                                <th>السائق</th>
+                                <th>العداد</th>
+                                <th>الحذف</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- نموذج المستخدم -->
+        <div id="userPanel" class="page">
+            <div class="navbar">
+                <h2>📝 نموذج إدخال البيانات</h2>
+                <button onclick="logout()" class="btn btn-danger">تسجيل الخروج</button>
+            </div>
+
+            <div class="form-container">
+                <div class="form-card">
+                    <form onsubmit="submitData(event)">
+                        <div class="form-group">
+                            <label>المنطقة:</label>
+                            <select id="areaSelect" class="input-field" required>
+                                <option value="">-- اختر المنطقة --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>الفرع:</label>
+                            <select id="branchSelect" class="input-field" required>
+                                <option value="">-- اختر الفرع --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>رقم السيارة:</label>
+                            <select id="carSelect" class="input-field" required>
+                                <option value="">-- اختر السيارة --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>اسم السائق:</label>
+                            <select id="driverSelect" class="input-field" required>
+                                <option value="">-- اختر السائق --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>عداد الخروج:</label>
+                            <input type="number" id="counterOut" class="input-field" placeholder="أدخل قراءة العداد"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>التاريخ والوقت:</label>
+                            <input type="text" id="dateTime" class="input-field" readonly>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">إرسال</button>
+                        <div id="successMsg" class="success-message" style="display: none;">✅ تم حفظ البيانات بنجاح!
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
